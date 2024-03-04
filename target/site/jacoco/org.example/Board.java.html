@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Minesweeper</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package org.example;
+
+import javax.swing.*;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.concurrent.ScheduledExecutorService;
+
+<span class="fc" id="L10">public class Board {</span>
+
+
+    public ArrayList&lt;ArrayList&lt;Tile&gt;&gt; setBoard(){
+<span class="fc" id="L14">        ArrayList&lt;ArrayList&lt;Tile&gt;&gt; mineField = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        for (int i=0; i &lt;8; i++){</span>
+
+<span class="fc" id="L18">            ArrayList&lt;Tile&gt; rowOfMines = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">            mineField.add(i,rowOfMines);</span>
+
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            for (int j=0; j &lt;8; j++){</span>
+<span class="fc" id="L22">                Tile currentTile = new Tile();</span>
+<span class="fc" id="L23">                rowOfMines.add(j, currentTile);</span>
+<span class="fc" id="L24">                currentTile.setxCoord(i);</span>
+<span class="fc" id="L25">                currentTile.setyCoord(j);</span>
+
+            }
+
+        }
+<span class="fc" id="L30">        return addBombs(mineField);</span>
+
+    }
+
+    public ArrayList&lt;ArrayList&lt;Tile&gt;&gt; addBombs (ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field){
+<span class="fc" id="L35">        int var= 0;</span>
+
+        do {
+<span class="fc" id="L38">            Random r = new Random();</span>
+<span class="fc" id="L39">            int x = r.nextInt(8);</span>
+<span class="fc" id="L40">            int y = r.nextInt(8);</span>
+            //check if it's already a mine
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (!(field.get(x).get(y).getBomb())) {</span>
+<span class="fc" id="L43">                field.get(x).get(y).setBomb(true);</span>
+<span class="fc" id="L44">                field.get(x).get(y).setValue(100);</span>
+<span class="fc" id="L45">                var++;</span>
+            }
+        }
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        while (var&lt;=10);</span>
+<span class="fc" id="L49">        setTileValues(field);//assign field values</span>
+<span class="fc" id="L50">        return field;</span>
+    }
+
+    public void printBoard (ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field){
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (int i =0;i&lt;8;i++){</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            for(int j=0;j&lt;8;j++){</span>
+<span class="nc" id="L57">                System.out.print(field.get(i).get(j).toString() + &quot; &quot;);</span>
+            }
+<span class="nc" id="L59">            System.out.println(&quot; ||&quot; + i);// prints right index</span>
+        }
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        for(int j=0;j&lt;8;j++) {</span>
+<span class="nc" id="L63">            System.out.print(&quot;___ &quot;);</span>
+
+        }
+<span class="nc" id="L66">        System.out.println();</span>
+<span class="nc" id="L67">        System.out.println(&quot;___ ___ ___ ___ ___ ___ ___ ___ &quot;);</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        for (int j=0; j&lt;8 ;j++){// prints bottom index</span>
+<span class="nc" id="L70">            System.out.print(&quot; &quot; +j + &quot; &quot;);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            if (j&lt;7){</span>
+<span class="nc" id="L72">                System.out.print(&quot; &quot;);</span>
+            }
+        }
+<span class="nc" id="L75">        System.out.println();</span>
+
+<span class="nc" id="L77">    }</span>
+
+    public void setTileValues (ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field){
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    for (int i =0; i&lt;8;i++){</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (int j=0;j&lt;8; j++){</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            if (!(field.get(i).get(j).getBomb())){</span>
+<span class="fc" id="L83">                int noOfBombs =0;</span>
+
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                if (i!=0){// top row</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">                    if (field.get(i-1).get(j).getBomb()) {</span>
+<span class="fc" id="L87">                        noOfBombs++;//checkTop</span>
+                    }
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                    if (j!=0){//topLeft corner</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">                        if (field.get(i-1).get(j-1).getBomb()) {</span>
+<span class="fc" id="L91">                            noOfBombs++;//topLeft</span>
+                        }
+                    }
+                }
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                if (i!=7){//bottomRow</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                    if (field.get(i+1).get(j).getBomb()) {</span>
+<span class="fc" id="L98">                        noOfBombs++;//checkBottom</span>
+                    }
+<span class="fc bfc" id="L100" title="All 2 branches covered.">                    if (j!=7){//bottomRight corner</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">                        if (field.get(i+1).get(j+1).getBomb()) {</span>
+<span class="fc" id="L102">                            noOfBombs++;//bottomRight</span>
+                        }
+                    }
+                }
+
+<span class="fc bfc" id="L107" title="All 2 branches covered.">                if (j!=0){// left row</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">                    if (field.get(i).get(j-1).getBomb()) {</span>
+<span class="fc" id="L109">                        noOfBombs++;//checkLeft</span>
+                    }
+<span class="fc bfc" id="L111" title="All 2 branches covered.">                    if (i!=7){//bottomLeft corner</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">                        if (field.get(i+1).get(j-1).getBomb()) {</span>
+<span class="fc" id="L113">                            noOfBombs++;//bottomLeft</span>
+                        }
+                    }
+                }
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                if (j!=7){// Right row</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                    if (field.get(i).get(j+1).getBomb()) {</span>
+<span class="fc" id="L120">                        noOfBombs++;//checkRight</span>
+                    }
+<span class="fc bfc" id="L122" title="All 2 branches covered.">                    if (i!=0){//TopRight corner</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">                        if (field.get(i-1).get(j+1).getBomb()) {</span>
+<span class="fc" id="L124">                            noOfBombs++;//checkTopRight</span>
+                        }
+                    }
+                }
+<span class="fc" id="L128">                field.get(i).get(j).setValue(noOfBombs);</span>
+
+            }
+        }
+    }
+
+
+<span class="fc" id="L135">    }</span>
+
+    public String player (ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field, int x, int y) {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (field.get(x).get(y).getBomb()) {</span>
+<span class="nc" id="L139">            return &quot;Bomb&quot;;</span>
+
+        } else {
+<span class="nc" id="L142">            field.get(x).get(y).setCover(false);</span>
+        }
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (int i = 0; i &lt; 8; i++) {//checking if all tiles that aren't bombs have been revealed</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            for (int j = 0; j &lt; 8; j++) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (!(field.get(x).get(y).getBomb())) {</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                    if ((field.get(x).get(y).getCover())) {</span>
+<span class="nc" id="L148">                        field.get(x).get(y).setCover(false);</span>
+                    } else {
+<span class="nc" id="L150">                        return &quot;Carry-On&quot;;</span>
+                    }
+                }
+            }
+        }
+<span class="nc" id="L155">        return &quot;Winner&quot;;</span>
+    }
+
+    public void setAllRevealed(ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field){
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        for (int i =0; i&lt;8;i++){</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            for (int j=0;j&lt;8; j++) {</span>
+<span class="nc" id="L161">                field.get(i).get(j).setCover(false);</span>
+            }
+
+        }
+
+
+<span class="nc" id="L167">    }</span>
+
+    public boolean validPos(int x,int y){
+<span class="nc bnc" id="L170" title="All 8 branches missed.">        return x&gt;=0 &amp;&amp; x&lt;8 &amp;&amp; y&gt;=0 &amp;&amp; y&lt;8;</span>
+    }
+
+    public boolean isRevealed(ArrayList&lt;ArrayList&lt;Tile&gt;&gt; field, int x,int y){
+<span class="nc" id="L174">        return field.get(x).get(y).getCover();</span>
+    }
+
+
+    }
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

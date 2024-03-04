@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class Board {
 
+
     public ArrayList<ArrayList<Tile>> setBoard(){
         ArrayList<ArrayList<Tile>> mineField = new ArrayList<>();
 
@@ -164,6 +165,15 @@ public class Board {
 
 
     }
+
+    public boolean validPos(int x,int y){
+        return x>=0 && x<8 && y>=0 && y<8;
+    }
+
+    public boolean isRevealed(ArrayList<ArrayList<Tile>> field, int x,int y){
+        return field.get(x).get(y).getCover();
+    }
+
 
     }
 

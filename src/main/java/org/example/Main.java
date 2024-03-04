@@ -19,15 +19,15 @@ public class Main {
         b1.printBoard(minefield);
         System.out.println("Let's proceed!!");
         String cond = "Start";
-        while (!(cond.equals("Complete"))){
+        while (!(cond.equals("Complete"))) {
             System.out.println(" ");
             System.out.println("Please select a Row to check");
             int row = in.nextInt();
             System.out.println("Please select a column to check");
             int column = in.nextInt();
-            String current = b1.player(minefield,row,column);
+            String current = b1.player(minefield, row, column);
 
-            switch (current){
+            switch (current) {
 
                 case "Bomb":
                     System.out.println(" ");
@@ -60,6 +60,5 @@ public class Main {
         }
 
 
-
-        }
     }
+}
